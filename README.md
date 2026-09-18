@@ -1,4 +1,4 @@
-# Snake Game
+# Serpentine
 
 Minimal classic Snake implementation using plain HTML/CSS/JS.
 

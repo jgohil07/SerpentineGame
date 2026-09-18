@@ -28,7 +28,7 @@ function setTheme(theme) {
   themeIcon.textContent = isDark ? '\u2600' : '\u263e';
   themeLabel.textContent = isDark ? 'Light mode' : 'Dark mode';
   themeToggle.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
-  localStorage.setItem('snake-theme', isDark ? 'dark' : 'light');
+  localStorage.setItem('serpentine-theme', isDark ? 'dark' : 'light');
 }
 
 function render() {
@@ -146,5 +146,5 @@ directionButtons.forEach((button) => {
 });
 
 setInterval(step, TICK_MS);
-setTheme(localStorage.getItem('snake-theme') || 'light');
+setTheme(localStorage.getItem('serpentine-theme') || 'light');
 render();
