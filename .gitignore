@@ -1,1 +1,17 @@
 .DS_Store
+Thumbs.db
+
+# Assistant plans, progress logs, reports and research (never commit)
+plan-*.md
+progress-*.md
+*-report-*.md
+research/
+
+# Editor scratch files
+.vscode/
+.idea/
+*.swp
+*~
+
+# Python bytecode
+__pycache__/

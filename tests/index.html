@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Serpentine tests</title>
+    <style>
+      body { margin: 0; font: 13px/1.5 ui-monospace, Menlo, monospace; background: #0a0e0c; color: #c3f5d0; }
+      main { padding: 16px; }
+      .pass { color: #3ee084; }
+      .fail { color: #ff4f6d; white-space: pre-wrap; }
+      h1 { font-size: 15px; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1 id="summary">running…</h1>
+      <p>Filter with <code>?filter=text</code>. Run headless with <code>python3 tests/run.py</code>.</p>
+      <ol id="results"></ol>
+    </main>
+    <script type="module">
+      import { run } from './harness.js';
+      import './logic.test.js';
+      import './e2e.test.js';
+      import './layout.test.js';
+
+      const list = document.getElementById('results');
+      const summary = document.getElementById('summary');
+      const filter = new URLSearchParams(location.search).get('filter') || '';
+
+      const results = await run({
+        filter,
+        onResult(result) {
+          const item = document.createElement('li');
+          item.className = result.ok ? 'pass' : 'fail';
+          item.textContent = `${result.ok ? 'ok  ' : 'FAIL'} ${result.suite} > ${result.name} (${result.ms}ms)${result.error ? `\n${result.error}` : ''}`;
+          list.append(item);
+        },
+      });
+
+      const failed = results.filter((r) => !r.ok).length;
+      summary.textContent = `${results.length - failed}/${results.length} passed${failed ? `, ${failed} failed` : ''}`;
+      summary.className = failed ? 'fail' : 'pass';
+      document.title = failed ? `FAIL ${failed}` : `PASS ${results.length}`;
+
+      // tests/run.py listens for this; opened by hand it just fails quietly.
+      fetch('/__results', { method: 'POST', body: JSON.stringify(results) }).catch(() => {});
+    </script>
+  </body>
+</html>

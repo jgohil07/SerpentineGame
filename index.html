@@ -1,57 +1,146 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark" data-input="desktop" data-layout="stack">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'"
+    />
     <title>Serpentine</title>
+    <meta name="description" content="Serpentine is a minimal, terminal-style Snake game: classic and wrap modes, combos, bonus food and offline play." />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#0a0e0c" data-theme-color />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Serpentine" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="icon" href="./icons/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <!-- Sets theme and input type before first paint: no flash of the wrong theme. -->
+    <script src="./src/boot.js"></script>
     <link rel="stylesheet" href="./src/styles.css" />
+    <script type="module" src="./src/game.js"></script>
   </head>
   <body>
-    <main class="app">
-      <header class="header">
-        <div>
-          <p class="eyebrow">Classic arcade</p>
-          <h1>Serpentine</h1>
+    <div class="app" data-app>
+      <header class="topbar">
+        <p class="brand" translate="no"><span class="brand-prompt" aria-hidden="true">~/</span>serpentine</p>
+        <div class="tools">
+          <span class="mode-tag" data-mode-tag>wrap</span>
+          <button class="icon-button" type="button" data-action="pause" aria-label="Pause" title="Pause (Space)" disabled>
+            <svg class="icon icon-pause" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4" height="14" /><rect x="14" y="5" width="4" height="14" /></svg>
+            <svg class="icon icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5l12 7-12 7z" /></svg>
+          </button>
+          <button class="icon-button" type="button" data-action="sound" aria-pressed="true" aria-label="Sound and vibration" title="Sound (M)">
+            <svg class="icon icon-sound-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9h4l5-4v14l-5-4H3z" /><path class="icon-stroke" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11" /></svg>
+            <svg class="icon icon-sound-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9h4l5-4v14l-5-4H3z" /><path class="icon-stroke" d="M15.5 9.5l5 5M20.5 9.5l-5 5" /></svg>
+          </button>
+          <button class="icon-button" type="button" data-action="theme" aria-label="Switch to light theme" title="Theme (T)">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle class="icon-stroke" cx="12" cy="12" r="8" /><path d="M12 4a8 8 0 0 1 0 16z" /></svg>
+          </button>
         </div>
-        <div class="score" aria-label="Score">
-          <span class="score-label">Score</span>
-          <strong data-score>0</strong>
-        </div>
-        <button class="theme-toggle" data-theme-toggle type="button" aria-label="Switch to dark mode">
-          <span data-theme-icon aria-hidden="true">&#9790;</span>
-          <span data-theme-label>Dark mode</span>
-        </button>
       </header>
 
-      <section class="status" aria-label="Game status" aria-live="polite">
-        <span class="status-dot" aria-hidden="true"></span>
-        <span data-status>Running</span>
-      </section>
+      <dl class="hud">
+        <div class="stat"><dt>score</dt><dd data-score>00000</dd></div>
+        <div class="stat"><dt>hi</dt><dd data-best>00000</dd></div>
+        <div class="stat"><dt>len</dt><dd data-length>003</dd></div>
+        <div class="stat"><dt>spd</dt><dd data-speed>1.0x</dd></div>
+      </dl>
 
-      <section
-        class="board"
-        data-board
-        role="grid"
-        aria-label="Serpentine game board"
-      ></section>
+      <main class="stage" data-stage>
+        <div class="board" data-board data-mode="wrap">
+          <canvas class="canvas" data-canvas role="img" aria-label="Serpentine game board"></canvas>
 
-      <section class="actions" aria-label="Game actions">
-        <button class="button button-primary" data-pause type="button">Pause</button>
-        <button class="button" data-restart type="button">Restart</button>
-      </section>
+          <div class="overlay" data-overlay>
+            <section class="screen" data-screen="ready" aria-labelledby="ready-title">
+              <h1 class="screen-title" id="ready-title" translate="no">SERPENTINE</h1>
+              <p class="screen-sub">// eat. grow. don't segfault.</p>
+              <div class="modes" role="group" aria-label="Game mode">
+                <button class="mode-option" type="button" data-mode-option="classic" aria-pressed="false">
+                  <span class="mode-key desktop-only" aria-hidden="true">1</span>classic<small>walls kill</small>
+                </button>
+                <button class="mode-option" type="button" data-mode-option="wrap" aria-pressed="true">
+                  <span class="mode-key desktop-only" aria-hidden="true">2</span>wrap<small>edges loop</small>
+                </button>
+              </div>
+              <p class="screen-meta">best <b data-ready-best>00000</b></p>
+              <button class="cta" type="button" data-action="start">&gt; start</button>
+              <p class="screen-hint desktop-only">press <kbd>space</kbd> or any arrow key</p>
+              <p class="screen-hint touch-only">swipe or use the pad to steer</p>
+              <p class="screen-tip">tip: eat fast to chain a combo, up to x5</p>
+            </section>
 
-      <section class="controls" aria-label="Direction controls">
-        <button class="control-button" data-direction="up" type="button" aria-label="Move up">&#8593;</button>
-        <div class="controls-row">
-          <button class="control-button" data-direction="left" type="button" aria-label="Move left">&#8592;</button>
-          <button class="control-button" data-direction="down" type="button" aria-label="Move down">&#8595;</button>
-          <button class="control-button" data-direction="right" type="button" aria-label="Move right">&#8594;</button>
+            <section class="screen" data-screen="paused" aria-labelledby="paused-title" hidden>
+              <h2 class="screen-title" id="paused-title">paused</h2>
+              <p class="screen-sub">// process suspended</p>
+              <button class="cta" type="button" data-action="resume">&gt; resume</button>
+              <div class="screen-row">
+                <button class="ghost" type="button" data-action="restart">restart</button>
+                <button class="ghost" type="button" data-action="menu">menu</button>
+              </div>
+              <p class="screen-hint desktop-only"><kbd>space</kbd> resume · <kbd>r</kbd> restart</p>
+            </section>
+
+            <section class="screen" data-screen="over" aria-labelledby="over-title" hidden>
+              <h2 class="screen-title" id="over-title" data-over-title>SIGSEGV</h2>
+              <p class="screen-sub" data-over-reason>core dumped</p>
+              <dl class="summary">
+                <div><dt>score</dt><dd data-over-score>0</dd></div>
+                <div><dt>length</dt><dd data-over-length>3</dd></div>
+                <div><dt>best</dt><dd data-over-best>0</dd></div>
+              </dl>
+              <p class="new-best" data-new-best hidden>&#9733; new best</p>
+              <button class="cta" type="button" data-action="restart">&gt; retry</button>
+              <div class="screen-row">
+                <button class="ghost" type="button" data-action="menu">change mode</button>
+              </div>
+              <p class="screen-hint desktop-only"><kbd>space</kbd> retry · <kbd>esc</kbd> menu</p>
+            </section>
+          </div>
         </div>
-      </section>
+      </main>
 
-      <p class="hint">Keyboard: Arrow keys or WASD, Space to pause/resume.</p>
-    </main>
+      <footer class="footer">
+        <div class="statusline">
+          <p class="status"><span aria-hidden="true">&gt; </span><span data-status>ready</span><span class="caret" aria-hidden="true"></span></p>
+          <p class="combo" data-combo hidden>
+            <span data-combo-label>x2</span>
+            <span class="combo-track" aria-hidden="true"><span class="combo-fill" data-combo-fill></span></span>
+          </p>
+        </div>
 
-    <script type="module" src="./src/game.js"></script>
+        <p class="keys desktop-only">
+          <span><kbd>&larr;&uarr;&darr;&rarr;</kbd>/<kbd>wasd</kbd>/<kbd>hjkl</kbd> move</span>
+          <span><kbd>space</kbd> pause</span>
+          <span><kbd>r</kbd> restart</span>
+          <span><kbd>m</kbd> mute</span>
+          <span><kbd>t</kbd> theme</span>
+        </p>
+
+        <div class="dpad touch-only" data-dpad aria-label="Direction pad">
+          <button class="pad pad-up" type="button" data-dir="up" aria-label="Up">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6l7 10H5z" /></svg>
+          </button>
+          <button class="pad pad-left" type="button" data-dir="left" aria-label="Left">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 12l10-7v14z" /></svg>
+          </button>
+          <button class="pad pad-center" type="button" data-action="pause" aria-label="Pause" disabled>
+            <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="6" width="3.5" height="12" /><rect x="13.5" y="6" width="3.5" height="12" /></svg>
+            <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6l10 6-10 6z" /></svg>
+          </button>
+          <button class="pad pad-right" type="button" data-dir="right" aria-label="Right">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 12L8 5v14z" /></svg>
+          </button>
+          <button class="pad pad-down" type="button" data-dir="down" aria-label="Down">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 18l7-10H5z" /></svg>
+          </button>
+        </div>
+      </footer>
+
+      <p class="sr-only" aria-live="polite" data-announce></p>
+    </div>
+    <noscript><p class="noscript">Serpentine needs JavaScript to run.</p></noscript>
   </body>
 </html>
