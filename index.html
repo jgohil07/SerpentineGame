@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Snake</title>
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header class="header">
+        <div>
+          <p class="eyebrow">Classic arcade</p>
+          <h1>Snake</h1>
+        </div>
+        <div class="score" aria-label="Score">
+          <span class="score-label">Score</span>
+          <strong data-score>0</strong>
+        </div>
+        <button class="theme-toggle" data-theme-toggle type="button" aria-label="Switch to dark mode">
+          <span data-theme-icon aria-hidden="true">&#9790;</span>
+          <span data-theme-label>Dark mode</span>
+        </button>
+      </header>
+
+      <section class="status" aria-label="Game status" aria-live="polite">
+        <span class="status-dot" aria-hidden="true"></span>
+        <span data-status>Running</span>
+      </section>
+
+      <section
+        class="board"
+        data-board
+        role="grid"
+        aria-label="Snake game board"
+      ></section>
+
+      <section class="actions" aria-label="Game actions">
+        <button class="button button-primary" data-pause type="button">Pause</button>
+        <button class="button" data-restart type="button">Restart</button>
+      </section>
+
+      <section class="controls" aria-label="Direction controls">
+        <button class="control-button" data-direction="up" type="button" aria-label="Move up">&#8593;</button>
+        <div class="controls-row">
+          <button class="control-button" data-direction="left" type="button" aria-label="Move left">&#8592;</button>
+          <button class="control-button" data-direction="down" type="button" aria-label="Move down">&#8595;</button>
+          <button class="control-button" data-direction="right" type="button" aria-label="Move right">&#8594;</button>
+        </div>
+      </section>
+
+      <p class="hint">Keyboard: Arrow keys or WASD, Space to pause/resume.</p>
+    </main>
+
+    <script type="module" src="./src/game.js"></script>
+  </body>
+</html>
