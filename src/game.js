@@ -487,7 +487,7 @@ function showScreen(name) {
     node.hidden = key !== name;
   }
   ui.overlay.hidden = name === null;
-  ui.overlay.dataset.screen = name ?? '';
+  ui.overlay.dataset.showing = name ?? ''; // not data-screen: that names the screens themselves
 }
 
 function syncControls() {

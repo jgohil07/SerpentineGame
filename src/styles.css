@@ -348,7 +348,7 @@ kbd {
 }
 
 /* The start screen hides the board more; pause/game-over keep it visible. */
-.overlay[data-screen="ready"] {
+.overlay[data-showing="ready"] {
   background: var(--c-overlay-solid);
 }
 
@@ -369,7 +369,7 @@ kbd {
   text-shadow: var(--title-glow);
 }
 
-[data-screen="over"] .screen-title {
+.screen[data-screen="over"] .screen-title {
   color: var(--c-danger);
 }
 

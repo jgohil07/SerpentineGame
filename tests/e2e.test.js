@@ -486,6 +486,19 @@ describe('e2e: touch', () => {
     equal(g.api.state.queue.length, 2, 'moves after lifting the finger do nothing');
   });
 
+  gameTest('a swipe that starts on an overlay button (START) still steers', { input: 'touch', width: 390, height: 844 }, async (g) => {
+    g.api.freeze(true);
+    const start = g.$('[data-action="start"]');
+    const r = start.getBoundingClientRect();
+    const x = r.left + r.width / 2;
+    const y = r.top + r.height / 2;
+    g.pointer('pointerdown', start, x, y);
+    g.pointer('pointermove', start, x, y - 60);
+    g.pointer('pointerup', start, x, y - 60);
+    equal(g.api.phase, 'playing', 'swipe from START begins the run');
+    equal(g.api.state.queue, [{ x: 0, y: -1 }], 'in the swiped direction');
+  });
+
   gameTest('the first real touch switches a desktop layout to touch', { input: null }, async (g) => {
     equal(g.doc.documentElement.dataset.input, 'desktop');
     assert(!g.visible('[data-dpad]'), 'no D-pad on desktop');

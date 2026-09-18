@@ -102,7 +102,7 @@ describe('layout: responsive viewports', () => {
         // Every overlay screen must fit inside the board.
         const board = rect('[data-board]');
         const checkScreen = (name) => {
-          const screen = rect(`[data-screen="${name}"]`);
+          const screen = rect(`section[data-screen="${name}"]`);
           assert(inside(screen, board, 1), `${name} screen ${describeRect(screen)} spills out of board ${describeRect(board)}`);
         };
         checkScreen('ready');

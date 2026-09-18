@@ -83,16 +83,16 @@ export function bindInput({ stage, dpad, onDirection, onCommand, getCellPx, onTo
   // gesture can chain several turns.
   let swipe = null;
 
+  // Swipes may start anywhere on the board, including on an overlay button
+  // (START, the mode buttons): a tap still clicks the button, a drag steers.
+  // No setPointerCapture: touch and pen are captured implicitly by the element
+  // under the finger, and moving that capture to the stage would stop the
+  // button from ever receiving its click.
   stage.addEventListener('pointerdown', (event) => {
-    if (event.pointerType === 'mouse' || (event.target instanceof Element && event.target.closest('button'))) {
+    if (event.pointerType === 'mouse') {
       return;
     }
     swipe = { id: event.pointerId, x: event.clientX, y: event.clientY };
-    try {
-      stage.setPointerCapture(event.pointerId);
-    } catch {
-      // Capture is best effort; the swipe still works inside the stage.
-    }
   });
 
   stage.addEventListener('pointermove', (event) => {
